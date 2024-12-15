@@ -1,10 +1,8 @@
 library(stringr)
 
-# Download data
+# Download data from http://www.stat.columbia.edu/~gelman/arm/examples/radon/
 
-# Unzip and read in data
-unzip("srrs2.dat.zip")
-unzip("cty.dat.zip")
+# read in data
 cty <- read.table("cty.dat", sep = ",", header = TRUE)
 srrs2 <- read.table("srrs2.dat", sep = ",", header = TRUE)
 
@@ -37,3 +35,6 @@ radon_mn <-  list(N = length(log_radon[mn_bool]),
                   log_radon = log_radon[mn_bool],
                   log_uppm = log_uppm[mn_bool],
                   county = as.integer(as.factor(county[mn_bool])))
+
+
+
