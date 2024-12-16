@@ -45,6 +45,8 @@ fit <- model$sample(
 fit$cmdstan_diagnose()
 fit$summary()
 
+bayesplot::mcmc_acf(fit$draws("beta"))
+bayesplot::mcmc_trace(fit$draws("beta"))
 bayesplot::mcmc_areas(fit$draws("beta"))
 
 # Most positively contributing variables: 4 (number of rooms) and 6 (distance to employment center)
