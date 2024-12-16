@@ -1,8 +1,8 @@
 data {
   int<lower=0> N; // dataset size
   int<lower=0> M; // number of features
-  real y[N];  // median house value
-  vector[M] features[N];
+  array[N] real y;  // median house value
+  array[N] vector[M] features;
 }
 
 parameters {

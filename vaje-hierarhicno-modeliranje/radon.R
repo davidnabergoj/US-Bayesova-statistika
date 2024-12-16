@@ -46,28 +46,40 @@ radon_mn <-  list(N = length(log_radon[mn_bool]),
 
 
 library(cmdstanr)
-model_complete_pooling <- cmdstan_model("radon/radon_pooled.stan")
-model_unpooled <- cmdstan_model("radon/radon_county_intercept.stan")
+install.packages("rstan")
+
+model_complete_pooling <- rstan::stan_model("radon/radon_pooled.stan")
+model_unpooled <- rstan::stan_model("radon/radon_county_intercept.stan")
 model_partially_pooled <- cmdstan_model("radon/radon_partially_pooled_noncentered.stan")
 model_varying_intercepts <- cmdstan_model("radon/radon_variable_intercept_noncentered.stan")
 model_varying_slopes <- cmdstan_model("radon/radon_variable_slope_noncentered.stan")
-model_varying_both <- cmdstan_model("radon/radon_variable_intercept_slope_noncentered.stan")
+model_varying_both <- rstan::stan_model("radon/radon_variable_intercept_slope_noncentered.stan")
 model_hierarchical_intercept <- cmdstan_model("radon/radon_hierarchical_intercept_noncentered.stan")
 
-fit_complete_pooling <- model_complete_pooling$sample(radon_mn, seed = 0, parallel_chains = 4)
-fit_unpooled <- model_unpooled$sample(radon_mn, seed = 0, parallel_chains = 4)
+fit_complete_pooling <- rstan::sampling(model_complete_pooling, radon_mn, seed = 0)
+fit_unpooled <- rstan::sampling(model_unpooled, radon_mn, seed = 0)
 fit_partially_pooled <- model_partially_pooled$sample(radon_mn, seed = 0, parallel_chains = 4)
 fit_varying_intercepts <- model_varying_intercepts$sample(radon_mn, seed = 0, parallel_chains = 4)
 fit_varying_slopes <- model_varying_slopes$sample(radon_mn, seed = 0, parallel_chains = 4)
-fit_varying_both <- model_varying_both$sample(radon_mn, seed = 0, parallel_chains = 4)
+fit_varying_both <- rstan::sampling(model_varying_both, radon_mn, seed = 0)
 fit_hierarchical_intercept <- model_hierarchical_intercept$sample(radon_mn, seed = 0, parallel_chains = 4)
 
+rstan::summary(fit_complete_pooling)
+
 # Different models let us answer different questions
-mean(fit_complete_pooling$draws("lp__"))
-mean(fit_unpooled$draws("lp__"))
+mean(rstan::extract(fit_complete_pooling)$lp__)
+mean(rstan::extract(fit_unpooled)$lp__)
 mean(fit_partially_pooled$draws("lp__"))
 mean(fit_varying_intercepts$draws("lp__"))
 mean(fit_varying_slopes$draws("lp__"))
-mean(fit_varying_both$draws("lp__"))
+mean(rstan::extract(fit_varying_both)$lp__)
 mean(fit_hierarchical_intercept$draws("lp__"))
 
+install.packages("loo")
+loo::waic(loo::extract_log_lik(fit_complete_pooling))
+loo::waic(loo::extract_log_lik(fit_unpooled))
+loo::waic(loo::extract_log_lik(fit_varying_both))
+
+loo::loo(loo::extract_log_lik(fit_complete_pooling))
+loo::loo(loo::extract_log_lik(fit_unpooled))
+loo::loo(loo::extract_log_lik(fit_varying_both))

@@ -1,4 +1,5 @@
 install.packages("mlbench")
+install.packages("bayesplot")
 library(mlbench)
 
 # Harrison and Rubinfield: Hedonic housing prices and the demand for clean air (1978)

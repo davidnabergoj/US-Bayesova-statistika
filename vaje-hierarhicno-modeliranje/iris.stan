@@ -1,7 +1,7 @@
 data {
   int<lower=0> N; // dataset size
-  int<lower=0, upper=1> setosa[N];  // target
-  vector[4] features[N];
+  array[N] int<lower=0, upper=1> setosa;  // target
+  array[N] vector[4] features;
 }
 
 parameters {

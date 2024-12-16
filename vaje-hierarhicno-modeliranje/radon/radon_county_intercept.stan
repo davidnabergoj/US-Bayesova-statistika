@@ -24,3 +24,9 @@ model {
   }
 }
 
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N) {
+    log_lik[n] = normal_lpdf(log_radon[n] | alpha[county_idx[n]] + beta * floor_measure[n], sigma_y);
+  }
+}

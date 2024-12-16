@@ -1,7 +1,7 @@
 data {
   int<lower=0> N;
-  real heights[N];
-  int<lower=0, upper=1> country[N];
+  array[N] real heights;
+  array[N] int<lower=0, upper=1> country;
   real<lower=0> prior_sigma;
 }
 
